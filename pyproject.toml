@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "pythoneda-artifact-shared-nix-flakes"
-version = "0.0.1a2"
-description = "Shared kernel for nix flakes in artifact space"
+name = "pythoneda-artifact-shared-changes"
+version = "0.0.1a1"
+description = "A shared kernel used by artifact domains for dealing with changes in source code"
 authors = ["rydnr <github@acm-sl.org>"]
 readme = "README.md"
-homepage = "https://github.com/pythoneda-artifact-shared/nix-flakes"
-packages = [{include = "pythonedaartifactsharednixflakes"}]
+homepage = "https://github.com/pythoneda-artifact-shared/changes"
+packages = [{include = "pythonedaartifactsharedchanges"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -1,9 +1,9 @@
 """
-pythonedaartifactsharednixflakes/nix_flake.py
+pythonedaartifactsharedchanges/changes.py
 
-This file defines the NixFlake class.
+This file defines the Change class.
 
-Copyright (C) 2023-today rydnr's pythoneda-artifact-shared/nix-flakes
+Copyright (C) 2023-today rydnr's pythoneda-artifact-shared/changes
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,5 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 from pythoneda.entity import Entity
 
-class NixFlake(Entity):
+class Change(Entity):
+    """
+    Represents a change in source code.
+
+    Class name: Change
+
+    Responsibilities:
+        - Represent a change unambiguously
+
+    Collaborators:
+        - None
+    """
     pass
