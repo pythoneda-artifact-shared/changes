@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pythoneda-artifact-shared-changes"
-version = "0.0.1a1"
+version = "0.0.1a2"
 description = "A shared kernel used by artifact domains for dealing with changes in source code"
 authors = ["rydnr <github@acm-sl.org>"]
 readme = "README.md"
