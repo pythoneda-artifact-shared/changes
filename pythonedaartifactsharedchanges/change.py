@@ -80,7 +80,7 @@ class Change(Entity):
         return self._branch
 
     @classmethod
-    def from_unidiff(cls, unidiffText:str, repositoryUrl:str, branch:str): # -> Change:
+    def from_unidiff_text(cls, unidiffText:str, repositoryUrl:str, branch:str): # -> Change:
         """
         Creates a new Change instance from given parameters.
         :param unidiffText: The unified diff.
@@ -93,6 +93,26 @@ class Change(Entity):
         :rtype: pythonedaartifactsharedchanges.change.Change
         """
         return cls(cls._parse_diff(unidiffText), repositoryUrl, branch)
+
+    @classmethod
+    def from_unidiff_file(cls, unidiffFile:str, repositoryUrl:str, branch:str): # -> Change:
+        """
+        Creates a new Change instance from given parameters.
+        :param unidiffFile: The unified diff file.
+        :type unidiffFile: str
+        :param repositoryUrl: The url of the repository.
+        :type repositoryUrl: str
+        :param branch: The branch the change applies to, within the repository.
+        :type branch: str
+        :return: A Change instance.
+        :rtype: pythonedaartifactsharedchanges.change.Change
+        """
+        result = None
+
+        with open(unidiffFile, 'r') as file:
+            result = cls(cls._parse_diff(file.read()), repositoryUrl, branch)
+
+        return result
 
     @classmethod
     def _parse_diff(cls, unidiffText: str) -> PatchSet:
