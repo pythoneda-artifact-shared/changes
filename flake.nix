@@ -42,7 +42,10 @@
             format = "pyproject";
 
             nativeBuildInputs = with python.pkgs; [ pip pkgs.jq poetry-core ];
-            propagatedBuildInputs = with python.pkgs; [ pythoneda-base ];
+            propagatedBuildInputs = with python.pkgs; [
+              pythoneda-base
+              unidiff
+            ];
 
             checkInputs = with python.pkgs; [ pytest ];
 
