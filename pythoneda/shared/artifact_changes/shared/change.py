@@ -1,9 +1,9 @@
 """
-pythonedaartifactsharedchanges/changes.py
+pythoneda/shared/artifact_changes/shared/changes.py
 
 This file defines the Change class.
 
-Copyright (C) 2023-today rydnr's pythoneda-artifact-shared/changes
+Copyright (C) 2023-today rydnr's pythoneda-shared-artifact-changes/shared
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
