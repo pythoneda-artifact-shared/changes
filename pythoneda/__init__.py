@@ -1,7 +1,7 @@
 """
-pythoneda/shared/__init__.py
+pythoneda/__init__.py
 
-This file ensures pythoneda.shared is a namespace.
+This file ensures pythoneda is a namespace.
 
 Copyright (C) 2023-today rydnr's pythoneda-shared-artifact-changes/shared
 
