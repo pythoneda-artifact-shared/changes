@@ -1,5 +1,5 @@
 """
-pythoneda/shared/artifact_changes/shared/changes.py
+pythoneda/shared/artifact_changes/change.py
 
 This file defines the Change class.
 
