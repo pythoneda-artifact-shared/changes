@@ -18,8 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-from pythoneda.entity import Entity
-from pythoneda.value_object import primary_key_attribute
+import json
+from pythoneda import Entity, primary_key_attribute
+from typing import Dict
 from unidiff import PatchSet
 
 class Change(Entity):
@@ -34,30 +35,33 @@ class Change(Entity):
     Collaborators:
         - None
     """
-    def __init__(self, patchSet:PatchSet, repositoryUrl:str, branch:str):
+    def __init__(self, unidiffText:str, repositoryUrl:str, branch:str, repositoryFolder:str=None):
         """
         Creates a new Change instance.
-        :param patchSet: The files affected and how.
-        :type patchSet: unidiff.PatchSet
+        :param unidiffText: The files affected and how.
+        :type unidiffText: str
         :param repositoryUrl: The url of the repository.
         :type repositoryUrl: str
         :param branch: The branch within the repository.
         :type branch: str
+        :param repositoryFolder: The folder of the cloned repository.
+        :type repositoryFolder: str
         """
         super().__init__()
-        self._patch_set = patchSet
+        self._unidiff_text = unidiffText
         self._repository_url = repositoryUrl
         self._branch = branch
+        self._repository_folder = repositoryFolder
 
     @property
     @primary_key_attribute
-    def patch_set(self) -> PatchSet:
+    def unidiff_text(self) -> str:
         """
-        Retrieves the PatchSet.
-        :return: Such instance.
-        :rtype: unidiff.PatchSet
+        Retrieves the unidiff text.
+        :return: The files affected and how.
+        :rtype: str
         """
-        return self._patch_set
+        return self._unidiff_text
 
     @property
     @primary_key_attribute
@@ -79,8 +83,27 @@ class Change(Entity):
         """
         return self._branch
 
+    @property
+    @primary_key_attribute
+    def repository_folder(self) -> str:
+        """
+        Retrieves the folder of the cloned repository.
+        :return: Such folder.
+        :rtype: str
+        """
+        return self._repository_folder
+
+    def patch_set(self) -> PatchSet:
+        """
+        Retrieves the unidiff information as a PatchSet.
+        :return: Such instance.
+        :rtype: unidiff.PatchSet
+        """
+        return self.__class__._parse_diff(self._unidiffText)
+
+
     @classmethod
-    def from_unidiff_text(cls, unidiffText:str, repositoryUrl:str, branch:str): # -> Change:
+    def from_unidiff_text(cls, unidiffText:str, repositoryUrl:str, branch:str, repositoryFolder:str=None): # -> Change:
         """
         Creates a new Change instance from given parameters.
         :param unidiffText: The unified diff.
@@ -89,13 +112,15 @@ class Change(Entity):
         :type repositoryUrl: str
         :param branch: The branch the change applies to, within the repository.
         :type branch: str
+        :param repositoryFolder: The folder of the cloned repository.
+        :type repositoryFolder: str
         :return: A Change instance.
         :rtype: pythonedaartifactsharedchanges.change.Change
         """
-        return cls(cls._parse_diff(unidiffText), repositoryUrl, branch)
+        return cls(unidiffText, repositoryUrl, branch, repositoryFolder)
 
     @classmethod
-    def from_unidiff_file(cls, unidiffFile:str, repositoryUrl:str, branch:str): # -> Change:
+    def from_unidiff_file(cls, unidiffFile:str, repositoryUrl:str, branch:str, repositoryFolder:str=None): # -> Change:
         """
         Creates a new Change instance from given parameters.
         :param unidiffFile: The unified diff file.
@@ -104,13 +129,15 @@ class Change(Entity):
         :type repositoryUrl: str
         :param branch: The branch the change applies to, within the repository.
         :type branch: str
+        :param repositoryFolder: The folder of the cloned repository.
+        :type repositoryFolder: str
         :return: A Change instance.
         :rtype: pythonedaartifactsharedchanges.change.Change
         """
         result = None
 
         with open(unidiffFile, 'r') as file:
-            result = cls(cls._parse_diff(file.read()), repositoryUrl, branch)
+            result = cls(file.read(), repositoryUrl, branch, repositoryFolder)
 
         return result
 
@@ -124,3 +151,46 @@ class Change(Entity):
         :rtype: unidiff.PatchSet
         """
         return PatchSet(unidiffText)
+
+    def to_dict(self) -> Dict:
+        """
+        Converts this instance into a dictionary.
+        :return: Such dictionary.
+        :rtype: Dict
+        """
+        return {
+            "unidiff_text": self.unidiff_text,
+            "repository_url": self.repository_url,
+            "branch": self.branch,
+            "repository_folder": self.repository_folder
+        }
+
+    @classmethod
+    def from_dict(cls, dict:Dict): # -> Change:
+        """
+        Creates a new instance with the contents of given dictionary.
+        :param dict: The dictionary.
+        :type dict: Dict
+        :return: A Change instance.
+        :rtype: pythoneda.shared.artifact_changes.change.Change
+        """
+        return cls(dict["unidiff_text"], dict["repository_url"], dict["branch"], dict.get("repository_folder", None))
+
+    def to_json(self) -> str:
+        """
+        Serializes this instance as json.
+        :return: The json text.
+        :rtype: str
+        """
+        return json.dumps(self.to_dict())
+
+    @classmethod
+    def from_json(cls, jsonText: str): # -> Change:
+        """
+        Reconstructs a Change instance from given json text.
+        :param jsonText: The json text.
+        :type jsonText: str
+        :return: The Change instance.
+        :rtype: pythoneda.shared.artifact_changes.change.Change
+        """
+        return cls.from_dict(json.loads(jsonText))
