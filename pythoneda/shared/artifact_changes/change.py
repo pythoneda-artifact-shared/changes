@@ -93,13 +93,14 @@ class Change(Entity):
         """
         return self._repository_folder
 
+    @property
     def patch_set(self) -> PatchSet:
         """
         Retrieves the unidiff information as a PatchSet.
         :return: Such instance.
         :rtype: unidiff.PatchSet
         """
-        return self.__class__._parse_diff(self._unidiffText)
+        return self.__class__._parse_diff(self._unidiff_text)
 
 
     @classmethod
