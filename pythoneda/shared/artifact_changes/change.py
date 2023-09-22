@@ -100,8 +100,10 @@ class Change(Entity):
         :return: Such instance.
         :rtype: unidiff.PatchSet
         """
-        return self.__class__._parse_diff(self._unidiff_text)
-
+        result = None
+        if self._unidiff_text is not None:
+            result = self.__class__._parse_diff(self._unidiff_text)
+        return result
 
     @classmethod
     def from_unidiff_text(cls, unidiffText:str, repositoryUrl:str, branch:str, repositoryFolder:str=None): # -> Change:
